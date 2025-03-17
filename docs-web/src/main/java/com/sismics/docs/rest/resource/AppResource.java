@@ -67,12 +67,14 @@ public class AppResource extends BaseResource {
      * @apiSuccess {String} min_version API minimum version
      * @apiSuccess {Boolean} guest_login True if guest login is enabled
      * @apiSuccess {String} default_language Default platform language
-     * @apiSuccess {Number} queued_tasks Number of queued tasks waiting to be processed
+     * @apiSuccess {Number} queued_tasks Number of queued tasks waiting to be
+     *             processed
      * @apiSuccess {String} total_memory Allocated JVM memory (in bytes)
      * @apiSuccess {String} free_memory Free JVM memory (in bytes)
      * @apiSuccess {String} document_count Number of documents
      * @apiSuccess {String} active_user_count Number of active users
-     * @apiSuccess {String} global_storage_current Global storage currently used (in bytes)
+     * @apiSuccess {String} global_storage_current Global storage currently used (in
+     *             bytes)
      * @apiSuccess {String} global_storage_quota Maximum global storage (in bytes)
      * @apiPermission none
      * @apiVersion 1.5.0
@@ -84,7 +86,7 @@ public class AppResource extends BaseResource {
         ResourceBundle configBundle = ConfigUtil.getConfigBundle();
         String currentVersion = configBundle.getString("api.current_version");
         String minVersion = configBundle.getString("api.min_version");
-        Boolean guestLogin = ConfigUtil.getConfigBooleanValue(ConfigType.GUEST_LOGIN);
+        Boolean guestLogin = true;
         Boolean ocrEnabled = ConfigUtil.getConfigBooleanValue(ConfigType.OCR_ENABLED, true);
         String defaultLanguage = ConfigUtil.getConfigStringValue(ConfigType.DEFAULT_LANGUAGE);
         UserDao userDao = new UserDao();
@@ -193,7 +195,8 @@ public class AppResource extends BaseResource {
         checkBaseFunction(BaseFunction.ADMIN);
         ValidationUtil.validateRequired(defaultLanguage, "default_language");
         if (!Constants.SUPPORTED_LANGUAGES.contains(defaultLanguage)) {
-            throw new ClientException("ValidationError", MessageFormat.format("{0} is not a supported language", defaultLanguage));
+            throw new ClientException("ValidationError",
+                    MessageFormat.format("{0} is not a supported language", defaultLanguage));
         }
 
         ConfigDao configDao = new ConfigDao();
@@ -288,19 +291,19 @@ public class AppResource extends BaseResource {
      * @apiVersion 1.5.0
      *
      * @param hostname SMTP hostname
-     * @param portStr SMTP port
+     * @param portStr  SMTP port
      * @param username SMTP username
      * @param password SMTP password
-     * @param from From address
+     * @param from     From address
      * @return Response
      */
     @POST
     @Path("config_smtp")
     public Response configSmtp(@FormParam("hostname") String hostname,
-                               @FormParam("port") String portStr,
-                               @FormParam("username") String username,
-                               @FormParam("password") String password,
-                               @FormParam("from") String from) {
+            @FormParam("port") String portStr,
+            @FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("from") String from) {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
@@ -427,8 +430,10 @@ public class AppResource extends BaseResource {
      * @apiName PostAppConfigInbox
      * @apiGroup App
      * @apiParam {Boolean} enabled True if the inbox scanning is enabled
-     * @apiParam {Boolean} autoTagsEnabled If true automatically add tags to document (prefixed by #)
-     * @apiParam {Boolean} deleteImported If true delete message from mailbox after import
+     * @apiParam {Boolean} autoTagsEnabled If true automatically add tags to
+     *           document (prefixed by #)
+     * @apiParam {Boolean} deleteImported If true delete message from mailbox after
+     *           import
      * @apiParam {String} hostname IMAP hostname
      * @apiParam {Integer} port IMAP port
      * @apiParam {String} username IMAP username
@@ -440,27 +445,27 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param enabled True if the inbox scanning is enabled
+     * @param enabled  True if the inbox scanning is enabled
      * @param hostname IMAP hostname
-     * @param portStr IMAP port
+     * @param portStr  IMAP port
      * @param username IMAP username
      * @param password IMAP password
-     * @param folder IMAP folder
-     * @param tag Tag for created documents
+     * @param folder   IMAP folder
+     * @param tag      Tag for created documents
      * @return Response
      */
     @POST
     @Path("config_inbox")
     public Response configInbox(@FormParam("enabled") Boolean enabled,
-                                @FormParam("autoTagsEnabled") Boolean autoTagsEnabled,
-                                @FormParam("deleteImported") Boolean deleteImported,
-                                @FormParam("hostname") String hostname,
-                                @FormParam("port") String portStr,
-                                @FormParam("starttls") Boolean starttls,
-                                @FormParam("username") String username,
-                                @FormParam("password") String password,
-                                @FormParam("folder") String folder,
-                                @FormParam("tag") String tag) {
+            @FormParam("autoTagsEnabled") Boolean autoTagsEnabled,
+            @FormParam("deleteImported") Boolean deleteImported,
+            @FormParam("hostname") String hostname,
+            @FormParam("port") String portStr,
+            @FormParam("starttls") Boolean starttls,
+            @FormParam("username") String username,
+            @FormParam("password") String password,
+            @FormParam("folder") String folder,
+            @FormParam("tag") String tag) {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
@@ -533,7 +538,8 @@ public class AppResource extends BaseResource {
      * @api {get} /app/log Get application logs
      * @apiName GetAppLog
      * @apiGroup App
-     * @apiParam {String="FATAL","ERROR","WARN","INFO","DEBUG"} level Minimum log level
+     * @apiParam {String="FATAL","ERROR","WARN","INFO","DEBUG"} level Minimum log
+     *           level
      * @apiParam {String} tag Filter on this logger tag
      * @apiParam {String} message Filter on this message
      * @apiParam {Number} limit Total number of logs to return
@@ -550,10 +556,10 @@ public class AppResource extends BaseResource {
      * @apiVersion 1.5.0
      *
      * @param minLevel Filter on logging level
-     * @param tag Filter on logger name / tag
-     * @param message Filter on message
-     * @param limit Page limit
-     * @param offset Page offset
+     * @param tag      Filter on logger name / tag
+     * @param message  Filter on message
+     * @param limit    Page limit
+     * @param offset   Page offset
      * @return Response
      */
     @GET
@@ -664,7 +670,8 @@ public class AppResource extends BaseResource {
         log.info("Checking {} files", fileMap.size());
 
         // Check if each stored file is valid
-        try (DirectoryStream<java.nio.file.Path> storedFileList = Files.newDirectoryStream(DirectoryUtil.getStorageDirectory())) {
+        try (DirectoryStream<java.nio.file.Path> storedFileList = Files
+                .newDirectoryStream(DirectoryUtil.getStorageDirectory())) {
             for (java.nio.file.Path storedFile : storedFileList) {
                 String fileName = storedFile.getFileName().toString();
                 String[] fileNameArray = fileName.split("_");
@@ -679,7 +686,8 @@ public class AppResource extends BaseResource {
 
         // Hard delete orphan audit logs
         EntityManager em = ThreadLocalContext.get().getEntityManager();
-        StringBuilder sb = new StringBuilder("delete from T_AUDIT_LOG al where al.LOG_ID_C in (select al.LOG_ID_C from T_AUDIT_LOG al ");
+        StringBuilder sb = new StringBuilder(
+                "delete from T_AUDIT_LOG al where al.LOG_ID_C in (select al.LOG_ID_C from T_AUDIT_LOG al ");
         sb.append(" left join T_DOCUMENT d on d.DOC_ID_C = al.LOG_IDENTITY_C and d.DOC_DELETEDATE_D is null ");
         sb.append(" left join T_ACL a on a.ACL_ID_C = al.LOG_IDENTITY_C and a.ACL_DELETEDATE_D is null ");
         sb.append(" left join T_COMMENT c on c.COM_ID_C = al.LOG_IDENTITY_C and c.COM_DELETEDATE_D is null ");
@@ -687,62 +695,80 @@ public class AppResource extends BaseResource {
         sb.append(" left join T_TAG t on t.TAG_ID_C = al.LOG_IDENTITY_C and t.TAG_DELETEDATE_D is null ");
         sb.append(" left join T_USER u on u.USE_ID_C = al.LOG_IDENTITY_C and u.USE_DELETEDATE_D is null ");
         sb.append(" left join T_GROUP g on g.GRP_ID_C = al.LOG_IDENTITY_C and g.GRP_DELETEDATE_D is null ");
-        sb.append(" where d.DOC_ID_C is null and a.ACL_ID_C is null and c.COM_ID_C is null and f.FIL_ID_C is null and t.TAG_ID_C is null and u.USE_ID_C is null and g.GRP_ID_C is null)");
+        sb.append(
+                " where d.DOC_ID_C is null and a.ACL_ID_C is null and c.COM_ID_C is null and f.FIL_ID_C is null and t.TAG_ID_C is null and u.USE_ID_C is null and g.GRP_ID_C is null)");
         Query q = em.createNativeQuery(sb.toString());
         log.info("Deleting {} orphan audit logs", q.executeUpdate());
 
         // Soft delete orphan ACLs
-        sb = new StringBuilder("update T_ACL a set ACL_DELETEDATE_D = :dateNow where a.ACL_ID_C in (select a.ACL_ID_C from T_ACL a ");
+        sb = new StringBuilder(
+                "update T_ACL a set ACL_DELETEDATE_D = :dateNow where a.ACL_ID_C in (select a.ACL_ID_C from T_ACL a ");
         sb.append(" left join T_SHARE s on s.SHA_ID_C = a.ACL_TARGETID_C ");
         sb.append(" left join T_USER u on u.USE_ID_C = a.ACL_TARGETID_C ");
         sb.append(" left join T_GROUP g on g.GRP_ID_C = a.ACL_TARGETID_C ");
         sb.append(" left join T_DOCUMENT d on d.DOC_ID_C = a.ACL_SOURCEID_C ");
         sb.append(" left join T_TAG t on t.TAG_ID_C = a.ACL_SOURCEID_C ");
-        sb.append(" where s.SHA_ID_C is null and u.USE_ID_C is null and g.GRP_ID_C is null or d.DOC_ID_C is null and t.TAG_ID_C is null)");
+        sb.append(
+                " where s.SHA_ID_C is null and u.USE_ID_C is null and g.GRP_ID_C is null or d.DOC_ID_C is null and t.TAG_ID_C is null)");
         q = em.createNativeQuery(sb.toString());
         q.setParameter("dateNow", new Date());
         log.info("Deleting {} orphan ACLs", q.executeUpdate());
 
         // Soft delete orphan comments
-        q = em.createNativeQuery("update T_COMMENT set COM_DELETEDATE_D = :dateNow where COM_ID_C in (select c.COM_ID_C from T_COMMENT c left join T_DOCUMENT d on d.DOC_ID_C = c.COM_IDDOC_C and d.DOC_DELETEDATE_D is null where d.DOC_ID_C is null)");
+        q = em.createNativeQuery(
+                "update T_COMMENT set COM_DELETEDATE_D = :dateNow where COM_ID_C in (select c.COM_ID_C from T_COMMENT c left join T_DOCUMENT d on d.DOC_ID_C = c.COM_IDDOC_C and d.DOC_DELETEDATE_D is null where d.DOC_ID_C is null)");
         q.setParameter("dateNow", new Date());
         log.info("Deleting {} orphan comments", q.executeUpdate());
 
         // Soft delete orphan document tag links
-        q = em.createNativeQuery("update T_DOCUMENT_TAG set DOT_DELETEDATE_D = :dateNow where DOT_ID_C in (select dt.DOT_ID_C from T_DOCUMENT_TAG dt left join T_DOCUMENT d on dt.DOT_IDDOCUMENT_C = d.DOC_ID_C and d.DOC_DELETEDATE_D is null left join T_TAG t on t.TAG_ID_C = dt.DOT_IDTAG_C and t.TAG_DELETEDATE_D is null where d.DOC_ID_C is null or t.TAG_ID_C is null)");
+        q = em.createNativeQuery(
+                "update T_DOCUMENT_TAG set DOT_DELETEDATE_D = :dateNow where DOT_ID_C in (select dt.DOT_ID_C from T_DOCUMENT_TAG dt left join T_DOCUMENT d on dt.DOT_IDDOCUMENT_C = d.DOC_ID_C and d.DOC_DELETEDATE_D is null left join T_TAG t on t.TAG_ID_C = dt.DOT_IDTAG_C and t.TAG_DELETEDATE_D is null where d.DOC_ID_C is null or t.TAG_ID_C is null)");
         q.setParameter("dateNow", new Date());
         log.info("Deleting {} orphan document tag links", q.executeUpdate());
 
         // Soft delete orphan shares
-        q = em.createNativeQuery("update T_SHARE set SHA_DELETEDATE_D = :dateNow where SHA_ID_C in (select s.SHA_ID_C from T_SHARE s left join T_ACL a on a.ACL_TARGETID_C = s.SHA_ID_C and a.ACL_DELETEDATE_D is null where a.ACL_ID_C is null)");
+        q = em.createNativeQuery(
+                "update T_SHARE set SHA_DELETEDATE_D = :dateNow where SHA_ID_C in (select s.SHA_ID_C from T_SHARE s left join T_ACL a on a.ACL_TARGETID_C = s.SHA_ID_C and a.ACL_DELETEDATE_D is null where a.ACL_ID_C is null)");
         q.setParameter("dateNow", new Date());
         log.info("Deleting {} orphan shares", q.executeUpdate());
 
         // Soft delete orphan tags
-        q = em.createNativeQuery("update T_TAG set TAG_DELETEDATE_D = :dateNow where TAG_ID_C in (select t.TAG_ID_C from T_TAG t left join T_USER u on u.USE_ID_C = t.TAG_IDUSER_C and u.USE_DELETEDATE_D is null where u.USE_ID_C is null)");
+        q = em.createNativeQuery(
+                "update T_TAG set TAG_DELETEDATE_D = :dateNow where TAG_ID_C in (select t.TAG_ID_C from T_TAG t left join T_USER u on u.USE_ID_C = t.TAG_IDUSER_C and u.USE_DELETEDATE_D is null where u.USE_ID_C is null)");
         q.setParameter("dateNow", new Date());
         log.info("Deleting {} orphan tags", q.executeUpdate());
 
         // Soft delete orphan documents
-        q = em.createNativeQuery("update T_DOCUMENT set DOC_DELETEDATE_D = :dateNow where DOC_ID_C in (select d.DOC_ID_C from T_DOCUMENT d left join T_USER u on u.USE_ID_C = d.DOC_IDUSER_C and u.USE_DELETEDATE_D is null where u.USE_ID_C is null)");
+        q = em.createNativeQuery(
+                "update T_DOCUMENT set DOC_DELETEDATE_D = :dateNow where DOC_ID_C in (select d.DOC_ID_C from T_DOCUMENT d left join T_USER u on u.USE_ID_C = d.DOC_IDUSER_C and u.USE_DELETEDATE_D is null where u.USE_ID_C is null)");
         q.setParameter("dateNow", new Date());
         log.info("Deleting {} orphan documents", q.executeUpdate());
 
         // Soft delete orphan files
-        q = em.createNativeQuery("update T_FILE set FIL_DELETEDATE_D = :dateNow where FIL_ID_C in (select f.FIL_ID_C from T_FILE f left join T_USER u on u.USE_ID_C = f.FIL_IDUSER_C and u.USE_DELETEDATE_D is null where u.USE_ID_C is null)");
+        q = em.createNativeQuery(
+                "update T_FILE set FIL_DELETEDATE_D = :dateNow where FIL_ID_C in (select f.FIL_ID_C from T_FILE f left join T_USER u on u.USE_ID_C = f.FIL_IDUSER_C and u.USE_DELETEDATE_D is null where u.USE_ID_C is null)");
         q.setParameter("dateNow", new Date());
         log.info("Deleting {} orphan files", q.executeUpdate());
 
         // Hard delete softly deleted data
-        log.info("Deleting {} soft deleted document tag links", em.createQuery("delete DocumentTag where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted ACLs", em.createQuery("delete Acl where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted shares", em.createQuery("delete Share where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted tags", em.createQuery("delete Tag where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted comments", em.createQuery("delete Comment where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted files", em.createQuery("delete File where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted documents", em.createQuery("delete Document where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted users", em.createQuery("delete User where deleteDate is not null").executeUpdate());
-        log.info("Deleting {} soft deleted groups", em.createQuery("delete Group where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted document tag links",
+                em.createQuery("delete DocumentTag where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted ACLs",
+                em.createQuery("delete Acl where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted shares",
+                em.createQuery("delete Share where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted tags",
+                em.createQuery("delete Tag where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted comments",
+                em.createQuery("delete Comment where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted files",
+                em.createQuery("delete File where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted documents",
+                em.createQuery("delete Document where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted users",
+                em.createQuery("delete User where deleteDate is not null").executeUpdate());
+        log.info("Deleting {} soft deleted groups",
+                em.createQuery("delete Group where deleteDate is not null").executeUpdate());
 
         // Always return OK
         JsonObjectBuilder response = Json.createObjectBuilder()
@@ -824,30 +850,30 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.9.0
      *
-     * @param enabled LDAP authentication enabled
-     * @param host LDAP server host
-     * @param portStr LDAP server port
-     * @param usessl LDAP use SSL (ldaps)
-     * @param adminDn Admin DN
-     * @param adminPassword Admin password
-     * @param baseDn Base DN
-     * @param filter LDAP filter
-     * @param defaultEmail LDAP default email
+     * @param enabled           LDAP authentication enabled
+     * @param host              LDAP server host
+     * @param portStr           LDAP server port
+     * @param usessl            LDAP use SSL (ldaps)
+     * @param adminDn           Admin DN
+     * @param adminPassword     Admin password
+     * @param baseDn            Base DN
+     * @param filter            LDAP filter
+     * @param defaultEmail      LDAP default email
      * @param defaultStorageStr LDAP default storage
      * @return Response
      */
     @POST
     @Path("config_ldap")
     public Response configLdap(@FormParam("enabled") Boolean enabled,
-                               @FormParam("host") String host,
-                               @FormParam("port") String portStr,
-                               @FormParam("usessl") Boolean usessl,
-                               @FormParam("admin_dn") String adminDn,
-                               @FormParam("admin_password") String adminPassword,
-                               @FormParam("base_dn") String baseDn,
-                               @FormParam("filter") String filter,
-                               @FormParam("default_email") String defaultEmail,
-                               @FormParam("default_storage") String defaultStorageStr) {
+            @FormParam("host") String host,
+            @FormParam("port") String portStr,
+            @FormParam("usessl") Boolean usessl,
+            @FormParam("admin_dn") String adminDn,
+            @FormParam("admin_password") String adminPassword,
+            @FormParam("base_dn") String baseDn,
+            @FormParam("filter") String filter,
+            @FormParam("default_email") String defaultEmail,
+            @FormParam("default_storage") String defaultStorageStr) {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }

@@ -3,7 +3,7 @@
 /**
  * Settings config page controller.
  */
-angular.module('docs').controller('SettingsConfig', function($scope, $rootScope, Restangular) {
+angular.module('docs').controller('SettingsConfig', function ($scope, $rootScope, Restangular) {
   // Get the app configuration
   Restangular.one('app').get().then(function (data) {
     $rootScope.app = data;
@@ -54,8 +54,8 @@ angular.module('docs').controller('SettingsConfig', function($scope, $rootScope,
     formData.append('image', image);
 
     // Send the file
-    var done = function() {
-      $scope.$apply(function() {
+    var done = function () {
+      $scope.$apply(function () {
         $scope.sendingImage = false;
         $scope[type] = null;
       });
@@ -68,10 +68,10 @@ angular.module('docs').controller('SettingsConfig', function($scope, $rootScope,
       cache: false,
       contentType: false,
       processData: false,
-      success: function() {
+      success: function () {
         done();
       },
-      error: function() {
+      error: function () {
         done();
       }
     });
