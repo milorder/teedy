@@ -1,0 +1,14 @@
+<div ng-controller="Register">
+    <form ng-submit="register()">
+        <label>用户名：</label>
+        <input type="text" ng-model="user.username" required>
+
+        <label>密码：</label>
+        <input type="password" ng-model="user.password" required>
+
+        <label>邮箱：</label>
+        <input type="email" ng-model="user.email" required>
+
+        <button type="submit">注册</button>
+    </form>
+</div>

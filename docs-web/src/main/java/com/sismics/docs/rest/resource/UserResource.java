@@ -46,7 +46,7 @@ import java.util.Set;
 
 /**
  * User REST resources.
- * 
+ *
  * @author jtremeaux
  */
 @Path("/user")
@@ -1142,7 +1142,7 @@ public class UserResource extends BaseResource {
 
     /**
      * Send the events about documents and files being deleted.
-     * 
+     *
      * @param documentList A document list
      * @param fileList     A file list
      */

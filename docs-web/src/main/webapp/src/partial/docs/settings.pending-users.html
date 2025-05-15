@@ -1,0 +1,24 @@
+<div>
+  <h2>待审核用户注册</h2>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>用户名</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="user in pendingUsers">
+      <td>{{ user.username }}</td>
+      <td>
+        <button class="btn btn-success btn-sm" ng-click="approveUser(user)">通过</button>
+        <button class="btn btn-danger btn-sm" ng-click="rejectUser(user)">不通过</button>
+      </td>
+    </tr>
+    <tr ng-if="pendingUsers.length === 0">
+      <td colspan="4">没有需要审核的用户注册请求。</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

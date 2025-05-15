@@ -1,60 +1,86 @@
-<div class="text-center">
-  <div class="btn-group pull-left">
-    <button type="button" class="btn btn-default" ng-click="closeFile()">
-      <span class="fas fa-times"></span>
+<div style="text-align: center; padding: 10px; background-color: #f8f8f8; border-bottom: 1px solid #eee;">
+  <div style="display: inline-block; float: left;">
+    <button type="button" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #dc3545;" ng-click="closeFile()" title="{{ 'file.view.close' | translate }}">
+      <i class="fas fa-times fa-lg"></i>
     </button>
   </div>
 
-  <div class="btn-group">
-    <button type="button" class="btn btn-default"
+  <div style="display: inline-block; margin: 0 10px;">
+    <button type="button" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #007bff;"
             ng-style="{ 'visibility': previousFile() ? 'visible' : 'hidden' }"
-            ng-click="goPreviousFile()">
-      {{ 'file.view.previous' | translate }}
+            ng-click="goPreviousFile()"
+            title="{{ 'file.view.previous' | translate }}">
+      <i class="fas fa-chevron-left fa-lg"></i> <span ng-if="previousFile()">{{ 'file.view.previous' | translate }}</span>
     </button>
-    <button type="button" class="btn btn-default"
+    <button type="button" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #007bff;"
             ng-style="{ 'visibility': nextFile() ? 'visible' : 'hidden' }"
-            ng-click="goNextFile()">
-      {{ 'file.view.next' | translate }}
-    </button>
-    <button type="button" class="btn btn-placeholder" style="visibility: hidden">
-      &nbsp;
+            ng-click="goNextFile()"
+            title="{{ 'file.view.next' | translate }}">
+      <i class="fas fa-chevron-right fa-lg"></i> <span ng-if="nextFile()">{{ 'file.view.next' | translate }}</span>
     </button>
   </div>
-  
-  <div class="btn-group pull-right">
-    <button type="button" class="btn btn-default" uib-tooltip="Print this file" tooltip-append-to-body="true" ng-click="printFile()">
-      <span class="fas fa-print"></span>
+
+  <div style="display: inline-block; float: right;">
+    <button type="button" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #6c757d;" uib-tooltip="{{ 'file.view.print_tooltip' | translate }}" tooltip-append-to-body="true" ng-click="printFile()">
+      <i class="fas fa-print fa-lg"></i>
     </button>
-    <button type="button" class="btn btn-default" uib-tooltip="Download this file" tooltip-append-to-body="true" ng-click="openFile()">
-      <span class="fas fa-download"></span>
+    <button type="button" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: white; background-color: #007bff;" uib-tooltip="{{ 'file.view.download_tooltip' | translate }}" tooltip-append-to-body="true" ng-click="openFile()">
+      <i class="fas fa-download fa-lg"></i>
     </button>
-    <button type="button" class="btn btn-default" uib-tooltip="Show text content" tooltip-append-to-body="true" ng-click="openFileContent()">
-      <span class="fas fa-eye"></span>
+    <button type="button" style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #6c757d;" uib-tooltip="{{ 'file.view.show_text_tooltip' | translate }}" tooltip-append-to-body="true" ng-click="openFileContent()">
+      <i class="fas fa-eye fa-lg"></i>
     </button>
   </div>
+  <div style="clear: both;"></div>
 </div>
 
-<div class="text-center" style="position: relative;" ng-if="$stateParams.fileId">
-  <!-- Standard preview -->
-  <img ng-src="../api/file/{{ $stateParams.fileId }}/data?size=web"
-       ng-init="error = false"
-       img-error="error = true"
-       ng-show="!error && canDisplayPreview()" />
+<div style="text-align: center; margin-top: 15px; padding: 10px;" ng-if="$stateParams.fileId">
+  <div ng-if="canDisplayPreview()" style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; background-color: #f8f8f8; border: 1px solid #eee; border-radius: 4px; padding: 10px;">
+    <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #007bff; background-color: #007bff; color: white;" ng-click="rotateImage()" ng-disabled="isCropping || isDrawing" title="{{ 'image_edit.rotate' | translate }}">
+      <i class="fas fa-sync-alt fa-lg"></i> <span ng-if="canDisplayPreview()">{{ 'image_edit.rotate' | translate }}</span>
+    </button>
+    <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #007bff; background-color: #007bff; color: white;" ng-click="startCrop()" ng-disabled="isCropping || isDrawing" title="{{ 'image_edit.crop' | translate }}">
+      <i class="fas fa-crop-alt fa-lg"></i> <span ng-if="canDisplayPreview()">{{ 'image_edit.crop' | translate }}</span>
+    </button>
+    <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #007bff; background-color: #007bff; color: white;" ng-click="startDrawing()" ng-disabled="isCropping || isDrawing" title="{{ 'image_edit.draw' | translate }}">
+      <i class="fas fa-pencil-alt fa-lg"></i> <span ng-if="canDisplayPreview()">{{ 'image_edit.draw' | translate }}</span>
+    </button>
+    <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #6c757d; background-color: #6c757d; color: white;" ng-click="resetImage()" title="{{ 'image_edit.reset' | translate }}">
+      <i class="fas fa-undo fa-lg"></i> <span ng-if="canDisplayPreview()">{{ 'image_edit.reset' | translate }}</span>
+    </button>
+    <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #28a745; background-color: #28a745; color: white;" ng-click="saveImage()" title="{{ 'image_edit.save' | translate }}">
+      <i class="fas fa-save fa-lg"></i> <span ng-if="canDisplayPreview()">{{ 'image_edit.save' | translate }}</span>
+    </button>
+    <div ng-if="isCropping" style="display: inline-flex; gap: 5px;">
+      <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #28a745; background-color: #28a745; color: white;" ng-click="applyCrop()" title="{{ 'image_edit.apply_crop' | translate }}">
+        <i class="fas fa-check fa-lg"></i> <span ng-if="isCropping">{{ 'image_edit.apply_crop' | translate }}</span>
+      </button>
+      <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #dc3545; background-color: #dc3545; color: white;" ng-click="cancelCrop()" title="{{ 'image_edit.cancel_crop' | translate }}">
+        <i class="fas fa-times fa-lg"></i> <span ng-if="isCropping">{{ 'image_edit.cancel_crop' | translate }}</span>
+      </button>
+    </div>
+    <div ng-if="isDrawing" style="display: inline-flex; gap: 5px;">
+      <button class="btn" style="padding: 8px 15px; border-radius: 4px; cursor: pointer; border: 1px solid #ffc107; background-color: #ffc107; color: #212529;" ng-click="stopDrawing()" title="{{ 'image_edit.stop_drawing' | translate }}">
+        <i class="fas fa-paint-brush fa-lg"></i> <span ng-if="isDrawing">{{ 'image_edit.stop_drawing' | translate }}</span>
+      </button>
+    </div>
+  </div>
 
-  <!-- Media player -->
-  <a href class="video-overlay" ng-if="!error && (file.mimetype.substring(0, 6) == 'video/' || file.mimetype.substring(0, 6) == 'audio/')"
+  <canvas id="imageCanvas"
+          ng-show="!error && canDisplayPreview()"
+          style="max-width: 100%; border: 1px solid #ddd; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 10px;"></canvas>
+
+  <a href class="video-overlay" style="position: relative; display: flex; justify-content: center; align-items: center; width: 100%; max-width: 600px; margin: 10px auto; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; overflow: hidden;" ng-if="!error && (file.mimetype.substring(0, 6) == 'video/' || file.mimetype.substring(0, 6) == 'audio/')"
      ng-init="videoPlayer = false" ng-click="videoPlayer = true">
-    <span class="fas fa-play-circle" ng-if="!videoPlayer"></span>
+    <i class="fas fa-play-circle fa-3x" style="color: #007bff;" ng-if="!videoPlayer"></i>
     <video ng-if="videoPlayer" autoplay="autoplay" loop="loop"
-           controls="controls" ng-src="../api/file/{{ $stateParams.fileId }}/data"></video>
+           controls="controls" ng-src="../api/file/{{ $stateParams.fileId }}/data" style="width: 100%; height: auto; display: block;"></video>
   </a>
 
-  <!-- PDF viewer -->
-  <iframe ng-src="{{ trustedFileUrl }}" class="pdf-viewer" scrolling="yes" ng-if="!error && file.mimetype == 'application/pdf'"></iframe>
+  <iframe ng-src="{{ trustedFileUrl }}" style="width: 100%; max-width: 800px; height: 600px; margin: 10px auto; border: 1px solid #ccc; border-radius: 4px; display: block;" scrolling="yes" ng-if="!error && file.mimetype == 'application/pdf'"></iframe>
 
-  <!-- File not found -->
-  <p class="well-lg" ng-show="error">
-    <span class="fas fa-exclamation-triangle"></span>
+  <div style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 15px; border-radius: 4px; margin-top: 10px;" ng-show="error">
+    <i class="fas fa-exclamation-triangle fa-lg"></i>
     {{ 'file.view.not_found' | translate }}
-  </p>
+  </div>
 </div>

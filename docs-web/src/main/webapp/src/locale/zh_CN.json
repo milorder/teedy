@@ -16,6 +16,14 @@
     "password_lost_error_title": "密码重置出错",
     "password_lost_error_message": "无法发送密码重置邮件，请联系您的管理员进行手动重置"
   },
+
+  "register": {
+    "title": "Register",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Submit"
+  },
+
   "passwordlost": {
     "title": "丢失密码",
     "message": "请输入您的用户名用于获取密码重置链接。如您忘记了您的用户名，请联系您的管理员",

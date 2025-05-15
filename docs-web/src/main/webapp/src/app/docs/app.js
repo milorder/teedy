@@ -244,6 +244,15 @@ angular.module('docs',
         }
       }
     })
+    .state('settings.pending-users', {
+      url: '/pending-users',
+      views: {
+        'settings': {
+          templateUrl: 'partial/docs/settings.pending-users.html',
+          controller: 'SettingsPending'
+        }
+      }
+    })
     .state('settings.ldap', {
       url: '/ldap',
       views: {
@@ -364,7 +373,16 @@ angular.module('docs',
         }
       }
     })
-    .state('user', {
+    .state('register', {
+      url: '/register',
+      views: {
+        'page': {
+          templateUrl: 'partial/docs/register.html',
+          controller: 'Register'
+        }
+      }
+    })
+      .state('user', {
       url: '/user',
       abstract: true,
       views: {

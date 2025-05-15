@@ -1,3 +1,4 @@
 cd /mnt/c/Users/Lenovo/Desktop/teedy/docs-web
+mvn clean compile jetty:run
 mvn jetty:run
 http://localhost:8080/
