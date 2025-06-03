@@ -81,8 +81,58 @@
     </repository>
   </repositories>
 
+
   <build>
     <plugins>
+    <plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.9</version>
+     <configuration>
+        <includes>
+            <include>**/*Test*</include>
+        </includes>
+    </configuration>
+    <executions>
+        <!-- 准备 JaCoCo 代理，用于测试阶段 -->
+        <execution>
+            <goals>
+                <goal>prepare-agent</goal>
+            </goals>
+        </execution>
+        <!-- 附加到 Maven 测试阶段，生成报告 -->
+        <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+                <goal>report</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.21.0</version> <!-- 使用最新版本 -->
+        <configuration>
+            <!-- 可选配置 -->
+            <rulesets>
+                <ruleset>customize-rules.xml</ruleset> <!-- 自定义规则集路径 -->
+            </rulesets>
+
+            <failOnViolation>false</failOnViolation>
+            <!--        <targetJdk>1.8</targetJdk> &lt;!&ndash; 指定目标JDK版本 &ndash;&gt;-->
+        </configuration>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>check</goal> <!-- 在验证阶段执行PMD检查 -->
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+   
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -116,17 +166,129 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${org.eclipse.jetty.jetty-maven-plugin.version}</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.12.1</version>
+        <dependencies>
+        <dependency>
+          <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-site-renderer</artifactId>
+            <version>1.11.1</version>
+        </dependency>
+        </dependencies>
+      </plugin>
+
+  
+       <plugin> 
+        <groupId>org.apache.maven.plugins</groupId> 
+        <artifactId>maven-javadoc-plugin</artifactId> 
+        <version>3.6.3</version> 
+        <configuration> 
+          <failOnError>false</failOnError> 
+           <rulesets>
+            <ruleset>${project.basedir}/customize-rules.xml</ruleset>
+          </rulesets>
+        </configuration> 
+        <executions> 
+          <execution> 
+            <id>aggregate</id> 
+            <goals> 
+              <goal>aggregate</goal> 
+            </goals> 
+            <phase>site</phase> 
+          </execution> 
+        </executions> 
+      </plugin>
+
+      
     </plugins>
+
+
+  
+ 
+
+    
   </build>
+
+  <reporting> 
+    <plugins> 
+    <!-- JaCoCo 报告插件 -->
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.9</version>
+            <reportSets>
+                <reportSet>
+                    <id>aggregate</id>
+                    <inherited>false</inherited>
+                    <reports>
+                        <report>report-aggregate</report>
+                    </reports>
+                </reportSet>
+            </reportSets>
+        </plugin>
+        <!-- PMD 报告插件 -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.17.0</version>
+            <configuration>
+                <rulesets>
+                    <ruleset>customize-rules.xml</ruleset>
+                </rulesets>
+            </configuration>
+        </plugin>
+
+      <plugin> 
+        <groupId>org.apache.maven.plugins</groupId> 
+        <artifactId>maven-javadoc-plugin</artifactId> 
+        <version>3.6.3</version> 
+        <configuration> 
+          <failOnError>false</failOnError> 
+        </configuration> 
+        <reportSets> 
+          <reportSet> 
+            <id>aggregate</id> 
+            <inherited>false</inherited> 
+            <reports> 
+              <report>aggregate</report> 
+            </reports> 
+          </reportSet> 
+          <reportSet> 
+            <id>default</id> 
+            <reports> 
+              <report>javadoc</report> 
+            </reports> 
+          </reportSet> 
+        </reportSets> 
+      </plugin> 
+    </plugins> 
+  </reporting>
 
   <modules>
     <module>docs-core</module>
     <module>docs-web-common</module>
     <module>docs-web</module>
   </modules>
+  <distributionManagement>
+    <site>
+      <id>local</id>
+      <url>file:${project.build.directory}/site</url>
+    </site>
+  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
+
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.7.1</version>
+        <scope>test</scope>
+    </dependency>
+
+
       <dependency>
         <groupId>com.sismics.docs</groupId>
         <artifactId>docs-core</artifactId>
@@ -490,5 +652,6 @@
 
     </dependencies>
   </dependencyManagement>
+
 
 </project>
